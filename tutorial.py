@@ -82,6 +82,7 @@ def gettraindata(string):
     main(data)
 
 def main(data):
+    print(len(data[0]))
     pass
 
 if __name__ == '__main__':
