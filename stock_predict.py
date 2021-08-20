@@ -1,10 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
-<<<<<<< HEAD
-=======
 
->>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
 tf.disable_v2_behavior()
 import pandas as pd
 import math
@@ -170,11 +167,7 @@ def LSTMtest(data):
             sess.run(tf.global_variables_initializer())
             theloss = []
             # 迭代次数
-<<<<<<< HEAD
-            for i in range(20):
-=======
             for i in range(5):
->>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
                 for step in range(len(batch_index) - 1):
                     # sess.run(b, feed_dict = replace_dict)
                     state_, loss_ = sess.run([train_op, loss],
@@ -235,10 +228,7 @@ def LSTMtest(data):
             plt.ylabel('close value/point', fontsize=14)
             plt.title('predict-----blue,real-----red', fontsize=10)
             plt.show()
-<<<<<<< HEAD
-=======
         return test_predict,test_y
->>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
 
 
 
