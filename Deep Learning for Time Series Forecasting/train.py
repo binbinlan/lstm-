@@ -113,3 +113,8 @@ pyplot.plot(inv_y,label='true')
 pyplot.plot(inv_yhat,label='test')
 pyplot.legend()
 pyplot.show()
+
+model.save(r'lstm-model.h5')
+
+# model=load_model('../model.h5')
+# score=model.predict(norm_test_x,verbose=0)
