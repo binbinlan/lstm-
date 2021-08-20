@@ -76,3 +76,4 @@ predictions = model.predict(X, verbose=0)
 print(predictions[:, 0])
 
 model.save(r'model.h5')
+
