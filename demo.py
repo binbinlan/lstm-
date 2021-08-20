@@ -6,6 +6,11 @@ import time
 import pandas as pd
 
 import stock_predict as pred
+<<<<<<< HEAD
+=======
+from stock_predict import LSTMtest
+
+>>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
 
 
 def creat_windows():
@@ -34,15 +39,26 @@ def creat_windows():
     L1.pack()
     E1 = tk.Entry(win, bd=5)
     E1.pack()
+<<<<<<< HEAD
     button1 = tk.Button(win, text="提交", command=lambda: getLable(E1))
+=======
+    button1 = tk.Button(win, text="提交", command=lambda: getLable(var,E1))
+>>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
     button1.pack()
     canvas.pack()
     win.mainloop()
 
+<<<<<<< HEAD
 def getLable(E1):
     string = E1.get()
     print(string)
     gettraindata(string)
+=======
+def getLable(var,E1):
+    string = E1.get()
+    print(string)
+    gettraindata(var,string)
+>>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
 
 def getdata(var, canvas):
     global file_path
@@ -56,9 +72,15 @@ def getdata(var, canvas):
     print()
 
     canvas.configure(text=data2)
+<<<<<<< HEAD
     canvas.text = data2
 
 def gettraindata(string):
+=======
+    #canvas.text = data2
+
+def gettraindata(var,string):
+>>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
     f_open = open(file_path)
     df = pd.read_csv(f_open)  # 读入股票数据
     list = string.split()
@@ -76,7 +98,12 @@ def gettraindata(string):
 
 def main(data):
     pred.LSTMtest(data)
+<<<<<<< HEAD
     var.set("预测的结果是：" + answer)
+=======
+    print(pred.LSTMtest(data))
+#    var.set("预测的结果是："+'ss')
+>>>>>>> bd9f071da940eb447d6e874d4707afba1e4f4947
 
 if __name__ == "__main__":
     creat_windows()
