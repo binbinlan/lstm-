@@ -3,8 +3,12 @@ from tkinter import *
 from tkinter import filedialog
 import pandas as pd
 import time
+from train import training
+
+N_hours = 0
 
 def creat_windows():
+
     win = tk.Tk()  # 创建窗口
     sw = win.winfo_screenwidth()
     sh = win.winfo_screenheight()
@@ -37,10 +41,16 @@ def creat_windows():
     E1 = tk.Entry(win, bd=5)
     E1.pack()
 
-    button1 = tk.Button(win, text="提交", command=lambda:[getLable(E1),print(canvas2.text)])
+    L2 = tk.Label(win, text="请设置时间步长")
+    L2.pack()
+    E2 = tk.Entry(win, bd=5)
+    E2.pack()
+
+
+    button1 = tk.Button(win, text="提交",command=lambda:[getLable(E1),print(canvas2.text),changeLabel(var)])
     button1.pack()
 
-    tk.Button(win, text='完成', width=20, height=2, bg='#FF8C00', command=win.quit,
+    tk.Button(win, text='完成', width=20, height=2, bg='#FF8C00', command=lambda:[gethours(E2),main(data,N_hours),win.quit()],
               font=('圆体', 10)).place(anchor=CENTER,x=600,y=500)
 
 
@@ -65,6 +75,9 @@ def getLable(E1):
     print('训练数据索引号为（从0开始）：',string)
     gettraindata(string)
 
+def changeLabel(var):
+    var.set('请点击完成')
+
 def gettraindata(string):
     f_open = open(file_path)
     df = pd.read_csv(f_open)  # 读入股票数据
@@ -79,10 +92,18 @@ def gettraindata(string):
     global data
     data = df.iloc[:, index].values
     print(data)
-    main(data)
+    #main(data)
 
-def main(data):
-    print(len(data[0]))
+def gethours(E2):
+    global N_hours
+    N_hours=int(E2.get())
+
+
+def main(data,N_hours):
+    N_features = len(data[0])
+    print('训练序列维度：',N_features,'\n')
+    print('训练时间步长：',N_hours)
+    training(data,N_hours,N_features)
     pass
 
 if __name__ == '__main__':
