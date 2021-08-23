@@ -38,17 +38,19 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 		agg.dropna(inplace=True)
 	return agg
 
-def training(data,N_hours,N_features):
+def training(data,N_hours,N_features,N_train_hours):
     #load dataset
     values=data
     print(data[0],'开始调用')
     #scale the data
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled = scaler.fit_transform(values)
+
     # specify the number of lag hours
     n_hours = N_hours
     n_features = N_features
     print(n_hours,n_features)
+
     # frame as supervised learning
     reframed = series_to_supervised(scaled, n_hours, 1)
     #reframed = series_to_supervised(values, n_hours, 1)
@@ -58,14 +60,16 @@ def training(data,N_hours,N_features):
     # split into train and test sets
     values = reframed.values
     #n_train_hours = 365 * 24
-    n_train_hours = 10
+    n_train_hours = N_train_hours
     train = values[:n_train_hours, :]
     test = values[n_train_hours:, :]
+
     # split into input and outputs
     n_obs = n_hours * n_features
     train_X, train_y = train[:, :n_obs], train[:, -1]
     test_X, test_y = test[:, :n_obs], test[:, -1]
     print(train_X.shape, len(train_X), train_y.shape)
+
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], n_hours, n_features))
     test_X = test_X.reshape((test_X.shape[0], n_hours, n_features))

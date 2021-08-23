@@ -6,13 +6,14 @@ import time
 from train import training
 
 N_hours = 0
+N_train_hours = 0
 
 def creat_windows():
 
     win = tk.Tk()  # 创建窗口
     sw = win.winfo_screenwidth()
     sh = win.winfo_screenheight()
-    ww, wh = 1200, 1000
+    ww, wh = 1000, 800
     x, y = (sw - ww) / 2, (sh - wh) / 2
     win.geometry("%dx%d+%d+%d" % (ww, wh, x, y - 40))  # 居中放置窗口
 
@@ -25,7 +26,7 @@ def creat_windows():
     canvas2.pack(side=BOTTOM,anchor=CENTER)
 
     var = tk.StringVar()  # 创建变量文字
-    var.set('请选择训练数据集')
+    var.set('↓请选择训练数据集↓')
 
     photo1=PhotoImage(file=r'./pic/brand2.png')
 
@@ -41,17 +42,24 @@ def creat_windows():
     E1 = tk.Entry(win, bd=5)
     E1.pack()
 
-    L2 = tk.Label(win, text="请设置时间步长")
+    L2 = tk.Label(win, text="请设置时序步长")
     L2.pack()
     E2 = tk.Entry(win, bd=5)
     E2.pack()
+
+    L3 = tk.Label(win, text="请设置训练集大小")
+    L3.pack()
+    E3 = tk.Entry(win,bd=5)
+    E3.pack()
 
 
     button1 = tk.Button(win, text="提交",command=lambda:[getLable(E1),print(canvas2.text),changeLabel(var)])
     button1.pack()
 
-    tk.Button(win, text='完成', width=20, height=2, bg='#FF8C00', command=lambda:[gethours(E2),main(data,N_hours),win.quit()],
-              font=('圆体', 10)).place(anchor=CENTER,x=600,y=500)
+    tk.Button(win, text='完成', width=20, height=2, bg='#FF8C00', command=lambda:[gethours(E2,E3),
+                                                                                main(data,N_hours,N_train_hours),
+                                                                                win.quit()],
+              font=('圆体', 10)).place(anchor=CENTER,x=500,y=500)
 
 
     win.mainloop()
@@ -94,16 +102,19 @@ def gettraindata(string):
     print(data)
     #main(data)
 
-def gethours(E2):
+def gethours(E2,E3):
     global N_hours
+    global N_train_hours
+    N_train_hours=int(E3.get())
     N_hours=int(E2.get())
 
 
-def main(data,N_hours):
+def main(data,N_hours,N_train_hours):       #N_train_hours为训练数据量
     N_features = len(data[0])
     print('训练序列维度：',N_features,'\n')
-    print('训练时间步长：',N_hours)
-    training(data,N_hours,N_features)
+    print('训练时间步长：',N_hours,'\n')
+    print('训练集大小为：',N_train_hours,'\n')
+    training(data,N_hours,N_features,N_train_hours)
     pass
 
 if __name__ == '__main__':
