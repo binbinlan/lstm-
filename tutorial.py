@@ -181,7 +181,7 @@ def time_set():
 def show_data():
     global file_path
     # load dataset
-    dataset = read_csv(file_path, header=0, index_col=0)
+    dataset = read_csv(file_path, header=0, index_col=0,encoding='gbk')
     values = dataset.values
     # specify columns to plot
     groups = [0, 1, 2, 3, 4, 5, 6]
@@ -197,7 +197,7 @@ def show_data():
         pyplot.subplot(len(groups), 1, i)
         pyplot.plot(values[:, group])
         # pyplot.title(columns2[i2], y=0.5, loc='right')
-        #pyplot.rcParams['font.sans-serif'] = ['SimHei']
+        pyplot.rcParams['font.sans-serif'] = ['SimHei']
         pyplot.title(dataset.columns[group], y=0.5, loc='right')
         i += 1
         i2 += 1
