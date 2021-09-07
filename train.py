@@ -8,10 +8,16 @@ from pandas import concat
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
-from keras.models import load_model
+#from keras.models import Sequential
+from tensorflow.python.keras.models import Sequential
+#from keras.layers import Dense
+from tensorflow.python.keras.layers.core import Dense
+#from keras.layers import LSTM
+from tensorflow.python.keras.layers.recurrent import LSTM
+#from tensorflow.python.keras.layers.core import LSTM
+
+
+#from keras.models import load_model
 pandas.set_option('display.max_columns', None)
 pandas.set_option('display.max_rows', None)
 
