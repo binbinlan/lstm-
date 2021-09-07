@@ -10,6 +10,8 @@ from matplotlib import pyplot
 from matplotlib import font_manager as fm, rcParams
 import matplotlib as plt
 import test_
+import sys
+import globalvar as gl
 
 #定义初始化参数
 
@@ -18,6 +20,8 @@ N_hours = 0
 N_train_hours = 0
 file_path=''
 result=''
+
+
 
 def creat_windows():
 
@@ -192,9 +196,12 @@ def switch_to_test():
 
 
 def gettraindata(string):
+    gl._init()
     f_open = open(file_path)
-    df = pd.read_csv(f_open)  # 读入股票数据
+    df = pd.read_csv(f_open)
+    # 读入股票数据
     list = string.split()
+    gl.set_value('送训列', string)
     print(list)
     x = len(list)
     index=[]
@@ -229,6 +236,11 @@ def main(var,data,N_hours,N_train_hours,checkVar1,win):
     N_train_hours=int(N_train_hours)
     training(data,N_hours,N_features,N_train_hours)
     var.set('训练已完成')
+
+
+    gl.set_value('步长', N_hours)
+    gl.set_value('训练集大小', N_train_hours)
+
     checkVar1 = int(checkVar1.get())
     if checkVar1 == 1:
         win.destroy()
@@ -276,6 +288,8 @@ def show_data():
     7.type of soil 土壤类型
     8.moisture content 含水率
     '''
+
+
 
 if __name__ == '__main__':
     creat_windows()
