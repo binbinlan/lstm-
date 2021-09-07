@@ -104,6 +104,7 @@ def training(data,N_hours,N_features,N_train_hours):
     inv_yhat = concatenate((test_X[:, -n_features:-1],yhat), axis=1)
     inv_yhat = scaler.inverse_transform(inv_yhat)
     print('predict result is\n',inv_yhat)
+    model.save(r'model.h5')
 
     # test_X = test_X.reshape((test_X.shape[0], n_hours * n_features))
     # # invert scaling for forecast

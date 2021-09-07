@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.simpledialog
 from tkinter import *
 from tkinter import filedialog
 import pandas as pd
@@ -8,6 +9,7 @@ from pandas import read_csv
 from matplotlib import pyplot
 from matplotlib import font_manager as fm, rcParams
 import matplotlib as plt
+import test_
 
 #定义初始化参数
 
@@ -15,14 +17,14 @@ import matplotlib as plt
 N_hours = 0
 N_train_hours = 0
 file_path=''
-
+result=''
 
 def creat_windows():
 
     win = tk.Tk()  # 创建窗口
     sw = win.winfo_screenwidth()
     sh = win.winfo_screenheight()
-    ww, wh = 1000, 830
+    ww, wh = 1000, 1000
     x, y = (sw - ww) / 2, (sh - wh) / 2
     win.geometry("%dx%d+%d+%d" % (ww, wh, x, y - 40))  # 居中放置窗口
 
@@ -47,24 +49,45 @@ def creat_windows():
 
     L1 = tk.Label(win, text="选择你需要的 列(请用空格隔开，从0开始)：")
     L1.pack(pady=10)
-    E1 = tk.Entry(win,width=40, bd=5)
-    E1.pack()
+    tk.Button(win, text='选择列', width=20, height=2, bg='#FF8C00', relief=RAISED, borderwidth=3,
+              command=lambda :ask_para(var02),
+              font=('圆体', 10)).pack()
+    # E1 = tk.Entry(win,width=40, bd=5)
+    # E1.pack()
+
+    var02 = tk.StringVar()
+    #var02.set('***')
+    L02=tk.Label(win,textvariable=var02)
+    L02.pack()
+
 
     L2 = tk.Label(win, text="请设置时序步长：")
     L2.pack(pady=10)
-    E2 = tk.Entry(win,bd=5)
-    E2.pack()
+    tk.Button(win, text='设置时序步长', width=20, height=2, bg='#FF8C00', relief=RAISED, borderwidth=3,
+              command=lambda :ask_time_step(var03),
+              font=('圆体', 10)).pack()
+    # E2 = tk.Entry(win,bd=5)
+    # E2.pack()
+
+    var03 = tk.StringVar()
+    L03 = tk.Label(win, textvariable=var03)
+    L03.pack()
 
     L3 = tk.Label(win, text="请设置训练集大小：")
     L3.pack(pady=10)
-    E3 = tk.Entry(win,bd=5)
-    E3.pack()
-
+    tk.Button(win, text='设置训练集大小', width=20, height=2, bg='#FF8C00', relief=RAISED, borderwidth=3,
+              command=lambda :ask_train_hours(var04),
+              font=('圆体', 10)).pack()
+    # E3 = tk.Entry(win,bd=5)
+    # E3.pack()
+    var04=tk.StringVar()
+    L04=tk.Label(win, textvariable=var04)
+    L04.pack(pady=10)
 
     button1 = tk.Button(win, text="提交到网络",width=20, height=2,
                         bg='#FF8C00',relief=RAISED, borderwidth=3,
                         font=('圆体', 10),
-                        command=lambda:[getLable(E1),
+                        command=lambda:[gettraindata(result),
                                         print(canvas2.text),
                                         changeLabel_1(var,checkVar0)])
     button1.pack(pady=15)
@@ -72,10 +95,10 @@ def creat_windows():
 
 
     tk.Button(win, text='开始训练', width=20, height=2, bg='#FF8C00',
-              command=lambda:[gethours(E2,E3),
+              command=lambda:[
                               win.iconify(),
                  #timeset(),
-                main(var,data,N_hours,N_train_hours)],
+                main(var,data,N_hours,N_train_hours,checkVar1,win)],
               relief=RAISED, borderwidth=3,
               font=('圆体', 10)).pack(pady=0)
 
@@ -94,8 +117,11 @@ def creat_windows():
     #     b.pack()
 
     checkVar0=StringVar(value=1)
-    check = Checkbutton(group,text='显示训练集',variable=checkVar0)
-    check.pack()
+    checkVar1=StringVar(value=1)
+    check1 = Checkbutton(group,text='显示训练集',variable=checkVar0)
+    check2 = Checkbutton(group, text='训练后验证', variable=checkVar1)
+    check1.pack()
+    check2.pack()
 
     # def button_click(event=None):
     #     print(checkVar0.get())
@@ -109,6 +135,27 @@ def creat_windows():
 
 
     win.mainloop()
+
+def ask_para(var02):
+    global result
+    result = tkinter.simpledialog.askstring(title='选择送训列:',prompt='选择送训列')
+    print(result)
+    gettraindata(result)
+    var02.set('送训列为：'+result)
+
+def ask_time_step(var03):
+    step= tkinter.simpledialog.askstring(title='选择时序步长:',prompt='时序步长')
+    global N_hours
+    N_hours = step
+    var03.set("时序步长为"+step)
+
+def ask_train_hours(var04):
+    train_hours = tkinter.simpledialog.askstring(title='选择训练集大小:',prompt='训练集大小')
+    global N_train_hours
+    N_train_hours = train_hours
+    var04.set('训练集大小为'+train_hours)
+
+
 
 
 def getdata(var, canvas):
@@ -138,6 +185,9 @@ def changeLabel_1(var,checkVar0):
     else:
         pass
 
+def switch_to_test():
+
+    pass
 
 
 
@@ -166,14 +216,25 @@ def gethours(E2,E3):
 
 
 
-def main(var,data,N_hours,N_train_hours):       #N_train_hours为训练数据量
+def main(var,data,N_hours,N_train_hours,checkVar1,win):
+
+    #N_train_hours为训练数据量
+
     N_features = len(data[0])
     print('训练序列维度：',N_features,'\n')
     print('训练时间步长：',N_hours,'\n')
     print('训练集大小为：',N_train_hours,'\n')
+    N_hours=int(N_hours)
+    N_features=int(N_features)
+    N_train_hours=int(N_train_hours)
     training(data,N_hours,N_features,N_train_hours)
     var.set('训练已完成')
-
+    checkVar1 = int(checkVar1.get())
+    if checkVar1 == 1:
+        win.destroy()
+        test_.creat_test()
+    else:
+        pass
 
 def time_set():
     time.sleep(1)
