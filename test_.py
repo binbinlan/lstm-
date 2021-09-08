@@ -189,4 +189,5 @@ def test():
     pyplot.legend()
 
 
-
+if __name__ == '__main__':
+    creat_test()
