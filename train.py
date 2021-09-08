@@ -87,9 +87,11 @@ def training(data,N_hours,N_features,N_train_hours):
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     # fit network
-    history = model.fit(train_X, train_y, epochs=50, batch_size=72, validation_data=(test_X, test_y), verbose=2,
+    history = model.fit(train_X, train_y, epochs=150, batch_size=20, validation_data=(test_X, test_y), verbose=2,
                         shuffle=False)
     # plot history
+    fig = pyplot.figure()
+    fig.canvas.set_window_title('损失函数')
     pyplot.plot(history.history['loss'], label='train')
     pyplot.plot(history.history['val_loss'], label='test')
     pyplot.legend()

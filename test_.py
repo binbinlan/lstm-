@@ -20,11 +20,13 @@ from train import training
 from pandas import read_csv
 from matplotlib import pyplot
 from matplotlib import font_manager as fm, rcParams
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import tutorial
 import globalvar as gl
 from pandas import DataFrame
 from pandas import concat
+from numpy import concatenate
+import numpy
 
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 	n_vars = 1 if type(data) is list else data.shape[1]
@@ -121,7 +123,7 @@ def test():
     print(y_real)
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled = scaler.fit_transform(data)
-
+    #scaled=data
 
     n_hours = gl.get_value('步长')
     n_features = data.shape[1]
@@ -131,24 +133,60 @@ def test():
     reframed = series_to_supervised(scaled, n_hours, 1)
     #reframed = series_to_supervised(values, n_hours, 1)
     print(reframed.shape)
-    print(reframed.head(5))
+    print(reframed.head(10))
 
     # split into train and test sets
     values = reframed.values
     #n_train_hours = 365 * 24
     test = values[:, :]
+    print(test)
 
     # split into input and outputs
     n_obs = n_hours * n_features
 
-    test_X, test_y = test[:, :n_obs], test[:, -1]
+    #test_X, test_y = test[:, :n_obs], test[:, -1]
+    test_X, test_y = test[:, : ], test[:, -1]
     print(test_X.shape, len(test_y), test_X.shape)
 
     # reshape input to be 3D [samples, timesteps, features]
 
-    test_X = test_X.reshape((test_X.shape[0], n_hours, n_features))
+    #test_X = test_X.reshape((test_X.shape[0], n_hours, n_features))
+    test_X = test_X.reshape((test_X.shape[0], n_hours+1, n_features))
     print(test_X.shape, test_y.shape)
+
+
 #creat_test()
+
+    print('xxx')
+    score=model.predict(test_X)
+    print(score.shape)
+    test_X = test_X.reshape((test_X.shape[0], (n_hours+1) * n_features))
+    print(test_X.shape)
+    score = concatenate((test_X[:, -n_features:-1], score), axis=1)
+    print(score.shape)
+    inv_score = scaler.inverse_transform(score)
+    print(inv_score)
+    print(inv_score.shape)
+
+
+    lastresult=DataFrame(inv_score)
+    lastresult.to_csv('lastresult.csv')
+
+    inv_score=inv_score[:,-1]
+    inv_score=numpy.squeeze(inv_score)
+    y_real=y_real[4:]
+    y_real=numpy.squeeze(y_real)
+    print(y_real)
+    print(inv_score)
+
+
+    fig=plt.figure()
+    fig.canvas.set_window_title('数据对比图')
+    my_x_sticks=numpy.arange(0,test_X.shape[0],1)
+    plt.xticks(my_x_sticks)
+    plt.plot(inv_score,c='r',label='pred')
+    plt.plot(y_real,c='k',label='true')
+    pyplot.legend()
 
 
 
